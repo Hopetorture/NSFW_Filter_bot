@@ -1,0 +1,2 @@
+clarifai-grpc
+python-telegram-bot
