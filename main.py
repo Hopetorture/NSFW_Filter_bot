@@ -25,15 +25,12 @@ logger = logging.getLogger(__name__)
 class PredictionModel:
     def __init__(self):
         self.stub = service_pb2_grpc.V2Stub(ClarifaiChannel.get_grpc_channel())
-        #moderation
-        #cccf390eb32cad478c7ae150069bd2c6
+        # moderation cccf390eb32cad478c7ae150069bd2c6
+        # nsfw - v1.0 ccc76d86d2004ed1a38ba0cf39ecb4b1
+        # nsfw-v1.0 e9576d86d2004ed1a38ba0cf39ecb4b1
+        # moderation a3ab820725bb472092a2cd63b1c0035a
+        # moderation d16f390eb32cad478c7ae150069bd2c6
 
-        #nsfw - v1.0
-        #ccc76d86d2004ed1a38ba0cf39ecb4b1
-        #nsfw-v1.0 e9576d86d2004ed1a38ba0cf39ecb4b1
-
-        #moderation a3ab820725bb472092a2cd63b1c0035a
-        #moderation d16f390eb32cad478c7ae150069bd2c6
         # self.model_id = 'aaa03c23b3724a16a56b629203edc62c'  # General
         self.model_id = 'd16f390eb32cad478c7ae150069bd2c6'  # moderation
         with open(CLARIFAI_KEY, 'r') as f:
@@ -53,7 +50,6 @@ class PredictionModel:
 
         total_nsfw_rating = 0.
         for concept in response.outputs[0].data.concepts:
-            # print('%12s: %.2f' % (concept.name, concept.value))
             if concept.name in ('explicit', 'suggestive'):
                 total_nsfw_rating += concept.value
         if total_nsfw_rating > 0.60:
@@ -74,6 +70,24 @@ def welcome_msg(update, context):
     update.message.reply_text(msg)
 
 
+def send_approval(update: Update, context):
+    try:
+        user_id = update.message.from_user
+    except Exception as e:
+        user_id = None
+
+    if user_id:
+        iuid = int(user_id)
+        if iuid == 735086534:  # Annie
+            update.message.reply_text('🍓🍓🍓')
+        if iuid == 202504819:  # Yuna
+            update.message.reply_text('💋💋💋')
+        if iuid == 101040948:  # me
+            update.message.reply_text('🌈🌈🌈')
+        return
+    update.message.reply_text('🍑🍑🍑')
+
+
 def image_reply(update: Update, context):
     if NSFW_FILTER:
         uids = set()
@@ -83,7 +97,7 @@ def image_reply(update: Update, context):
             uids.add(p.file_unique_id)
             photo = bytes(p.get_file().download_as_bytearray())
             if Model.is_nsfw(photo):
-                update.message.reply_text('🍑🍑🍑')
+                send_approval(update, context)
                 return
         return
 
@@ -105,7 +119,6 @@ def echo(update, ctx):
 
 
 def run_bot():
-    logging.info('Bot is starting')
     with open(TOKEN_PATH, 'r') as f:
         token = f.read().strip()
 
