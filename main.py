@@ -72,17 +72,16 @@ def welcome_msg(update, context):
 
 def send_approval(update: Update, context):
     try:
-        user_id = update.message.from_user
+        user_id = update.message.from_user.id
     except Exception as e:
         user_id = None
 
     if user_id:
-        iuid = int(user_id)
-        if iuid == 735086534:  # Annie
+        if user_id == 735086534:  # Annie
             update.message.reply_text('🍓🍓🍓')
-        if iuid == 202504819:  # Yuna
+        if user_id == 202504819:  # Yuna
             update.message.reply_text('💋💋💋')
-        if iuid == 101040948:  # me
+        if user_id == 101040948:  # me
             update.message.reply_text('🌈🌈🌈')
         return
     update.message.reply_text('🍑🍑🍑')
