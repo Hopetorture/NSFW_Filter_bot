@@ -79,10 +79,13 @@ def send_approval(update: Update, context):
     if user_id:
         if user_id == 735086534:  # Annie
             update.message.reply_text('🍓🍓🍓')
-        if user_id == 202504819:  # Yuna
+        elif user_id == 202504819:  # Yuna
             update.message.reply_text('💋💋💋')
-        if user_id == 101040948:  # me
+        elif user_id == 101040948:  # me
             update.message.reply_text('🌈🌈🌈')
+        elif user_id == 1255924798:  # Mary K
+            update.message.reply_text('😍😍😍')
+
         return
     update.message.reply_text('🍑🍑🍑')
 
